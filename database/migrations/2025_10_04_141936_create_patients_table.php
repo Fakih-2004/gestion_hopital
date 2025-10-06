@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('tele');
             $table->boolean('is_new')->default(true); 
             $table->timestamps();
+
+
+            $table->index(['nom' ,'prenom','tele']);
         });
     }
 

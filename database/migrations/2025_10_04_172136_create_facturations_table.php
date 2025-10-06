@@ -20,8 +20,13 @@ return new class extends Migration
             $table->string('mode_paiement');
             $table->foreignId('rendez_vous_id')->constrained('rendez_vouses')->onDelete('cascade');
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
-
             $table->timestamps();
+            $table->foreignId('medecin_id')->constrained('medecins')->onDelete('cascade');
+
+            $table->index('rendez_vous_id');
+            $table->index('patient_id');
+
+
         });
     }
 

@@ -17,8 +17,12 @@ return new class extends Migration
             $table->enum('statut', ['en_attente', 'confirmé', 'annulé'])->default('en_attente');
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
+            $table->foreignId('medecin_id')->constrained('medecins')->onDelete('cascade'); 
             $table->foreignId('planning_id')->constrained('plannings')->onDelete('cascade');
             $table->timestamps();
+
+            $table->index('patient_id', 'date_heure', 'service_id');
+
         });
     }
 

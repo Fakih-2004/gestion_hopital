@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RendezVous extends Model
 {
       protected $guarded = ['id'];
-      
+
       public function medecin()
     {
         return $this->belongsTo(Medecin::class);
@@ -22,6 +22,7 @@ class RendezVous extends Model
     {
         return $this->hasOne(Facturation::class);
     }
+    
 
     public function ordonnance()
     {

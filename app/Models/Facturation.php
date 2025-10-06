@@ -11,4 +11,8 @@ class Facturation extends Model
     {
         return $this->belongsTo(RendezVous::class);
     }
+    public function patient() { return $this->belongsTo(Patient::class); }
+
+    public function medecin() { return $this->belongsTo(Medecin::class); }
+
 }

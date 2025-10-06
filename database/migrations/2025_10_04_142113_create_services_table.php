@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('statut', ['actif', 'inactif'])->default('actif');
             $table->timestamps();
         });
+        $table->index('nom');
+
     }
 
     /**

@@ -11,4 +11,15 @@ class Patient extends Model
     {
         return $this->hasMany(RendezVous::class);
     }
+
+
+     public function ordonnances()
+    {
+        return $this->hasMany(Ordonnance::class);
+    }
+
+    public function facturations()
+    {
+        return $this->hasMany(Facturation::class);
+    }
 }

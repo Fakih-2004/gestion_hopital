@@ -28,4 +28,14 @@ class Medecin extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function ordonnances()
+    {
+        return $this->hasMany(Ordonnance::class);
+    }
+
+    public function facturations()
+    {
+        return $this->hasMany(Facturation::class);
+    }
+
 }

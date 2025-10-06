@@ -17,7 +17,15 @@ return new class extends Migration
             $table->text('instruction_generale');
             $table->foreignId('rendez_vous_id')->constrained('rendez_vouses')->onDelete('cascade');
             $table->foreignId('pharmacien_id')->constrained('pharmaciens')->onDelete('cascade');
+            $table->foreignId('medecin_id')->constrained('medecins')->onDelete('cascade'); 
             $table->timestamps();
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
+
+            
+            $table->index('pharmacien_id', 'rendez_vous');
+
+
+            
         });
     }
 
