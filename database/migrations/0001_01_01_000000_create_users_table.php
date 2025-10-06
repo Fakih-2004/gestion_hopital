@@ -18,6 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('cascade');
+            $table->string('phone')->default('0000000000');
             $table->timestamps();
         });
 

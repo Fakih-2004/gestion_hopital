@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Planning extends Model
+{
+       protected $guarded = ['id'];
+
+        public function medecin()
+    {
+        return $this->belongsTo(Medecin::class);
+    }
+}

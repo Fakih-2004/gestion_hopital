@@ -16,11 +16,28 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
+    protected $guarded = [
+        'id',
     ];
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+    public function medecin()
+{
+    return $this->hasOne(Medecin::class);
+}
+
+public function role()
+{
+    return $this->belongsTo(Role::class);
+}
+
+    public function hasPermission($permissionName)
+    {
+        return $this->role->permissions()->where('name', $permissionName)->exists();
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
