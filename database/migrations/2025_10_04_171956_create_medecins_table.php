@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('specialite');
             $table->enum('statut', ['actif', 'inactif'])->default('actif');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->timestamps();
         });
          $table->index('nom','specialite');
