@@ -6,29 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('adresse');
-            $table->date('date_N');
-            $table->string('tele');
-            $table->boolean('is_new')->default(true); 
+            $table->string('email')->nullable();
+            $table->string('tele')->nullable(); 
+            $table->string('adresse')->nullable();
+            $table->date('date_naissance')->nullable();
+            $table->boolean('is_new')->default(true);
             $table->timestamps();
 
+<<<<<<< HEAD
 
             $table->index(['nom' ,'prenom','tele']);
+=======
+            $table->index(['nom', 'prenom', 'tele']);
+>>>>>>> c983371 (Fix migrations, seeders, models and add controllers and routes v1)
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('patients');

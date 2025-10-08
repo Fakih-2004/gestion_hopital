@@ -39,3 +39,4 @@ class Medecin extends Model
     }
 
 }
+
