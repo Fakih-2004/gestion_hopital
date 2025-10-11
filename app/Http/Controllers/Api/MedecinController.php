@@ -8,7 +8,7 @@ use App\Models\Medecin;
 
 class MedecinController extends Controller
 {
-    // Liste tous les médecins avec info user et service
+
     public function index()
     {
         $medecins = Medecin::with('user', 'service')->get();
@@ -29,7 +29,6 @@ class MedecinController extends Controller
             'prenom' => explode(' ', $medecin->user->name)[1] ?? '',
             'email' => $medecin->user->email,
             'phone' => $medecin->user->phone,
-            'specialite' => $medecin->specialite,
             'service' => $medecin->service->nom ?? null,
         ];
 

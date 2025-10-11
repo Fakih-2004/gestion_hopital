@@ -25,11 +25,17 @@ class PlanningController extends Controller
         $request->validate([
             'medecin_id' => 'required|exists:medecins,id',
             'date' => 'required|date',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after:date_debut',
+            'heure_debut' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
         ]);
 
-        $planning = Planning::create($request->all());
+        $planning = Planning::create([
+            'medecin_id' => $request->medecin_id,
+            'date' => $request->date,
+            'heure_debut' => $request->heure_debut,
+            'heure_fin' => $request->heure_fin,
+        ]);
+
         return response()->json($planning, 201);
     }
 
@@ -37,6 +43,12 @@ class PlanningController extends Controller
     {
         $planning = Planning::find($id);
         if (!$planning) return response()->json(['message' => 'Planning non trouvé'], 404);
+
+        $request->validate([
+            'date' => 'sometimes|date',
+            'heure_debut' => 'sometimes|date_format:H:i',
+            'heure_fin' => 'sometimes|date_format:H:i|after:heure_debut',
+        ]);
 
         $planning->update($request->all());
         return response()->json($planning);

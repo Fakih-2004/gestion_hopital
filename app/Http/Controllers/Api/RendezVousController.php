@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RendezVous;
 use App\Models\Patient;
-use App\Models\Medecin;
 use App\Models\Planning;
 
 class RendezVousController extends Controller
 {
-    // Créer un rendez-vous
     public function store(Request $request)
     {
         $request->validate([
@@ -20,10 +18,9 @@ class RendezVousController extends Controller
             'tele' => 'required|string',
             'email' => 'nullable|email',
             'service_id' => 'required|exists:services,id',
-            'date_heure' => 'required|date',
+            'date_heure' => 'required|date_format:Y-m-d H:i:s',
         ]);
 
-        // Créer ou récupérer le patient
         $patient = Patient::firstOrCreate(
             ['tele' => $request->tele],
             [
@@ -35,58 +32,61 @@ class RendezVousController extends Controller
             ]
         );
 
-        // Chercher un médecin disponible pour ce service et date
-        $medecin = Medecin::where('service_id', $request->service_id)
-                    ->whereHas('plannings', function($q) use ($request) {
-                        $q->where('date_debut', '<=', $request->date_heure)
-                          ->where('date_fin', '>=', $request->date_heure);
-                    })
-                    ->inRandomOrder()
-                    ->first();
+       
+        $plannings = Planning::whereHas('medecin', function ($q) use ($request) {
+                $q->where('service_id', $request->service_id);
+            })
+            ->where('date', date('Y-m-d', strtotime($request->date_heure)))
+            ->where('heure_debut', '<=', date('H:i:s', strtotime($request->date_heure)))
+            ->where('heure_fin', '>=', date('H:i:s', strtotime($request->date_heure)))
+            ->with('medecin.user')
+            ->get();
 
-        if (!$medecin) {
-            return response()->json(['message' => 'Aucun médecin disponible à cette date'], 404);
+        if ($plannings->isEmpty()) {
+            return response()->json(['message' => 'Aucun créneau disponible pour ce service à cette heure.'], 404);
         }
 
-        // Récupérer le planning correspondant
-        $planning = $medecin->plannings()
-                    ->where('date_debut', '<=', $request->date_heure)
-                    ->where('date_fin', '>=', $request->date_heure)
-                    ->first();
+       
+        $planningDisponible = null;
+        foreach ($plannings as $planning) {
+            $dejaPris = RendezVous::where('medecin_id', $planning->medecin->id)
+                ->where('date_heure', $request->date_heure)
+                ->exists();
+
+            if (!$dejaPris) {
+                $planningDisponible = $planning;
+                break;
+            }
+        }
+
+        if (!$planningDisponible) {
+            return response()->json([
+                'message' => 'Tous les médecins du service sont occupés à cette heure. Veuillez choisir un autre créneau.'
+            ], 409);
+        }
 
 
         $rendezVous = RendezVous::create([
             'patient_id' => $patient->id,
-            'medecin_id' => $medecin->id,
+            'medecin_id' => $planningDisponible->medecin->id,
             'service_id' => $request->service_id,
-            'planning_id' => $planning->id,
+            'planning_id' => $planningDisponible->id,
             'date_heure' => $request->date_heure,
         ]);
 
         return response()->json([
-            'message' => 'Rendez-vous créé avec succès',
+            'message' => 'Rendez-vous créé avec succès ✅',
             'rendez_vous' => $rendezVous,
             'medecin' => [
-                'nom' => $medecin->nom,
-                'prenom' => $medecin->prenom,
-                'specialite' => $medecin->specialite,
+                'nom' => $planningDisponible->medecin->user->name ?? null,
+                'email' => $planningDisponible->medecin->user->email ?? null,
+                'phone' => $planningDisponible->medecin->user->phone ?? null,
+            ],
+            'planning' => [
+                'date' => $planningDisponible->date,
+                'heure_debut' => $planningDisponible->heure_debut,
+                'heure_fin' => $planningDisponible->heure_fin,
             ],
         ], 201);
-    }
-
-    // Lister tous les rendez-vous (admin ou médecin)
-    public function index()
-    {
-        $rvs = RendezVous::with(['patient', 'medecin', 'service', 'planning'])->get();
-        return response()->json($rvs);
-    }
-
-    // Voir un rendez-vous
-    public function show($id)
-    {
-        $rv = RendezVous::with(['patient', 'medecin', 'service', 'planning'])->find($id);
-        if (!$rv) return response()->json(['message' => 'Rendez-vous non trouvé'], 404);
-
-        return response()->json($rv);
     }
 }
