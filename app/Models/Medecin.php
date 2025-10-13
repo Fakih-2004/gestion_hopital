@@ -6,37 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Medecin extends Model
 {
-       protected $guarded = ['id'];
-       
+    protected $guarded = ['id', 'user_id'];
+
+    // Relation avec les plannings
     public function plannings()
     {
         return $this->hasMany(Planning::class);
     }
 
-    public function rendezVouses()
+    // Relation avec les rendez-vous
+    public function rendezVous()
     {
         return $this->hasMany(RendezVous::class);
     }
 
-    public function service()
-{
-    return $this->belongsTo(Service::class);
-}
-
- public function user()
+    // Relation avec le user
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    public function ordonnances()
-    {
-        return $this->hasMany(Ordonnance::class);
-    }
-
-    public function facturations()
-    {
-        return $this->hasMany(Facturation::class);
-    }
-
 }
+
 

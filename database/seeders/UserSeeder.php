@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
         //create users random
         $roles = Role::whereNotIn('name', ['admin'])->pluck('name')->toArray();
 
-        User::factory(10)->create()->each(function ($user) use ($roles) {
+        User::factory(6)->create()->each(function ($user) use ($roles) {
             $role = fake()->randomElement($roles);
             $user->assignRole($role);
 
@@ -46,7 +46,6 @@ class UserSeeder extends Seeder
             if ($role === 'medecin') {
                 Medecin::create([
                     'user_id' => $user->id,
-                    'specialite' => fake()->randomElement(['Cardiologie', 'Dermatologie', 'Pédiatrie', 'Neurologie']),
                     'statut' => 'actif',
                     'service_id' => null,
                 ]);

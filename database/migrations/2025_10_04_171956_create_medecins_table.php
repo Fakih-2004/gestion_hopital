@@ -11,8 +11,7 @@ return new class extends Migration
         Schema::create('medecins', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
-            $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null'); // un médecin peut ne pas avoir de service au début
-            $table->string('specialite')->nullable();
+            $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('statut', ['actif', 'inactif'])->default('actif');
             $table->timestamps();
         });

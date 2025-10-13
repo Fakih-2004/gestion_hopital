@@ -11,7 +11,7 @@ class PharmacieStockController extends Controller
     public function index()
     {
         $stocks = PharmacieStock::with('pharmacien')->get();
-        return response()->json($stocks);
+        return response()->json($stocks, 200);
     }
 
     public function show($id)
@@ -20,7 +20,7 @@ class PharmacieStockController extends Controller
         if (!$stock) {
             return response()->json(['message' => 'Stock non trouvé'], 404);
         }
-        return response()->json($stock);
+        return response()->json($stock, 200);
     }
 
     public function store(Request $request)
@@ -66,7 +66,7 @@ class PharmacieStockController extends Controller
         ]);
 
         $stock->update($request->all());
-        return response()->json($stock);
+        return response()->json($stock, 200);
     }
 
     public function destroy($id)
@@ -77,6 +77,6 @@ class PharmacieStockController extends Controller
         }
 
         $stock->delete();
-        return response()->json(['message' => 'Stock supprimé avec succès']);
+        return response()->json(['message' => 'Stock supprimé avec succès'], 200);
     }
 }
