@@ -14,14 +14,13 @@ return new class extends Migration
             $table->string('emplacement');
             $table->enum('statut', ['actif', 'inactif'])->default('actif');
             $table->timestamps();
-            $table->index('nom');
-        });
-<<<<<<< HEAD
-        $table->index('nom');
-=======
+       
+       
 
->>>>>>> c983371 (Fix migrations, seeders, models and add controllers and routes v1)
+        $table->index(['nom']);
 
+
+ });
     }
 
     public function down(): void

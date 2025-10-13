@@ -21,4 +21,9 @@ public function pharmacien()
 {
     return $this->belongsTo(User::class, 'pharmacien_id');
 }
+
+protected $casts = [
+        'instruction_generale' => 'encrypted', 
+    ];
+
 }

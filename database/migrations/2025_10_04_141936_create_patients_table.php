@@ -19,12 +19,11 @@ return new class extends Migration
             $table->boolean('is_new')->default(true);
             $table->timestamps();
 
-<<<<<<< HEAD
+
 
             $table->index(['nom' ,'prenom','tele']);
-=======
-            $table->index(['nom', 'prenom', 'tele']);
->>>>>>> c983371 (Fix migrations, seeders, models and add controllers and routes v1)
+
+
         });
     }
 
